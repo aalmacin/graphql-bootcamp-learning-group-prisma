@@ -1,0 +1,92 @@
+query {
+  posts {
+    id
+    title
+    body
+    published
+    author {
+      id
+      name
+      email
+    }
+   comments {
+      id
+    	text
+    } 
+  }
+}
+
+
+query {
+  users {
+    id
+    name
+    email
+  }
+}
+
+
+mutation {
+  createUser(data: {
+    name: "Warren Buffet",
+    email: "warren@example.com"
+  }) {
+    id
+    name
+    email
+  }
+}
+
+mutation {
+  updateUser(data: {name: "Warren Buffet"}, where: {id: "ckm9whybx008109543mhfxm1q"}) {
+    id
+    name
+  }
+}
+
+mutation {
+  deleteUser(where: {id: "ckm9whybx008109543mhfxm1q"}) {
+    id
+    name
+  }
+}
+
+mutation {
+  createPost(data: {
+    title: "World",
+    body: "The world is yours",
+    published:true,
+    author: {
+      connect: {id: "ckm9ybk3j00110b00db5j0mj5"}
+    }
+  }) {
+    id
+    title
+    body
+    published
+    author {
+      id
+      name
+      email
+      
+    }
+  }
+}
+
+mutation {
+  updatePost(data: {body: "Woah"}, where: {id: "ckm9ycex4001t0b00yis9fyn4"}) {
+    id
+    title
+    body
+    published
+  }
+}
+
+mutation {
+  createComment(data: {text: "This is nice", user: {connect: {id: "ckm9ybuo6001c0b00fciocubt"}}, post: {
+    connect: {id: "ckm9yhgvv005j0b00m0ohts5t"}
+  }}) {
+    id
+    text
+  }
+}
