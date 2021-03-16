@@ -7,6 +7,12 @@ const prisma = new Prisma({
 
 
 const createPostForUser = async (authorId, data) => {
+    const userExists = await prisma.exists.User({
+        id: authorId,
+    })
+    if(!userExists) {
+        throw new Error("User not found")
+    }
     const post = await prisma.mutation.createPost({
         data: {
             ...data,
@@ -16,16 +22,17 @@ const createPostForUser = async (authorId, data) => {
                 }
             }
         }
-    }, '{ id }')
-    const user = await prisma.query.user({
-        where: {
-            id: authorId
-        }
-    }, '{ id name email posts {id title published } }')
-    return user
+    }, '{ id author { id name email posts {id title published } } }')
+    return post.author
 }
 
 const updatePost = async (postId, data) => {
+    const postExists = await prisma.exists.Post({
+        id: postId,
+    })
+    if(!postExists) {
+        throw new Error("Post not found")
+    }
     const post = await prisma.mutation.updatePost({
         data: {
             ...data
@@ -33,20 +40,16 @@ const updatePost = async (postId, data) => {
         where: {
             id: postId
         }
-    }, '{ id author { id } }')
-    const user = await prisma.query.user({
-        where: {
-            id: post.author.id
-        }
-    }, '{ id name email posts {id title published } }')
-    return user
+    }, '{ id author { id name email posts {id title published } } }')
+    return post.author
 }
 
-// updatePost('ckmbda8qc00bl0a00yujit7ph', {
-//     title: 'This works'
-// }).then(data => {
-//     console.log(data)
-// }).catch(err => console.log(err))
+updatePost('ckmbda8qc00bl0a00yujit7ph', {
+    title: 'This works'
+}).then(data => {
+    console.log(data)
+}).catch(err => console.log(err))
+
 // createPostForUser('ckmbd7gwl009r0a00t0d10ofo', {
 //     title: "Great books to read",
 //     body: "The war of art",
@@ -55,7 +58,7 @@ const updatePost = async (postId, data) => {
 //     console.log(data)
 // })
 
-// createPostForUser('ckm9ybk3j00110b00db5j0mj5', {
+// createPostForUser('ckmbd7gwl009r0a00t0d10ofo', {
 //     title: "Great books to read",
 //     body: "The war of art",
 //     published: true
