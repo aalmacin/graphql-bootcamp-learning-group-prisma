@@ -7,6 +7,14 @@
                     "default": "http://localhost:4466"
                 }
             }
+        },
+        "book-reviews": {
+            "schemaPath": "src/generated/book-reviews-prisma.graphql",
+            "extensions": {
+                "endpoints": {
+                    "default": "http://localhost:4466/reviews/default"
+                }
+            }
         }
     }
 }
