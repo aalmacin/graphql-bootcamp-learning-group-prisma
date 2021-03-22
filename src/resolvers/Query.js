@@ -1,5 +1,16 @@
 export default {
         users(parent, args, {db: {users}, prisma}, info) {
+            const opArgs = {}
+            if(args.query) {
+                opArgs.where = {
+                    OR: [
+                        {name_contains: args.query},
+                        {email_contains: args.query}
+                    ]
+                }
+                return prisma.query.users(opArgs, info)
+            }
+
             return prisma.query.users(null, info)
 
             // // nothing, string, object
