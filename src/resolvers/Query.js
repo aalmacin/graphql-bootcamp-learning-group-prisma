@@ -38,6 +38,17 @@ export default {
             }
         },
         posts(parent, args, {db: {posts}, prisma}, info) {
+            if(args.query) {
+                return prisma.query.posts({
+                    where: {
+                        OR: [
+                            {title_contains: args.query},
+                            {body_contains: args.query},
+                        ]
+                    }
+                }, info)
+            }
+
             return prisma.query.posts(null, info)
             // if(!args.query) {
             // return posts
