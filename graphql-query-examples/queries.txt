@@ -16,6 +16,25 @@ query {
   }
 }
 
+query {
+  comments {
+    id
+    text
+    user {
+      id
+      name
+      email
+      age
+    }
+    post {
+      id
+      title
+      body
+      published
+    }
+  }
+}
+
 
 query {
   users {
