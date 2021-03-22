@@ -1,10 +1,14 @@
 export default {
-        users(parent, args, {db: {users}}, info) {
-            if(!args.query) {
-                return users
-            }
+        users(parent, args, {db: {users}, prisma}, info) {
+            return prisma.query.users(null, info)
 
-            return users.filter((u) => u.name.toLowerCase().includes(args.query.toLowerCase()))
+            // // nothing, string, object
+
+            // if(!args.query) {
+            //     return users
+            // }
+
+            // return users.filter((u) => u.name.toLowerCase().includes(args.query.toLowerCase()))
         },
         me() {
             return {
@@ -22,17 +26,18 @@ export default {
                 published: true
             }
         },
-        posts(parent, args, {db: {posts}}) {
-            if(!args.query) {
-            return posts
-            }
-            return posts.filter((p) => {
-                return p.body.toLowerCase().includes(
-                    args.query.toLowerCase()
-                ) || p.title.toLowerCase().includes(
-                    args.query.toLowerCase()
-                )
-            })
+        posts(parent, args, {db: {posts}, prisma}, info) {
+            return prisma.query.posts(null, info)
+            // if(!args.query) {
+            // return posts
+            // }
+            // return posts.filter((p) => {
+            //     return p.body.toLowerCase().includes(
+            //         args.query.toLowerCase()
+            //     ) || p.title.toLowerCase().includes(
+            //         args.query.toLowerCase()
+            //     )
+            // })
         },
         comments(parent, args, {db: {comments}}) {
             return comments
