@@ -61,7 +61,7 @@ export default {
             //     )
             // })
         },
-        comments(parent, args, {db: {comments}, prisma}, info) {
+        comments(parent, args, {prisma}, info) {
             return prisma.query.comments(null, info)
         }
     }

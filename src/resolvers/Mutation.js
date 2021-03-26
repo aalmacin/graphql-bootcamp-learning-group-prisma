@@ -1,18 +1,20 @@
 import uuid from "uuid/v4";
 export default {
-  createUser(parent, { data, data: { email } }, { db: { users } }, info) {
-    const emailTaken = users.some((u) => u.email === email);
+  async createUser(parent, { data, data: { email } }, { db: { users }, prisma }, info) {
+    const emailTaken = await prisma.exists.User({email: email})
 
     if (emailTaken) {
       throw new Error("Email taken.");
     }
 
-    const user = {
-      id: uuid(),
-      ...data,
-    };
-    users.push(user);
-    return user;
+    // const user = {
+    //   id: uuid(),
+    //   ...data,
+    // };
+    // users.push(user);
+    return prisma.mutation.createUser({
+      data
+    }, info)
   },
   updateUser(parent, { user: id, data }, { db: { users } }, info) {
     const user = users.find((u) => u.id === id);
