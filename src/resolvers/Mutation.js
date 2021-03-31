@@ -13,26 +13,11 @@ export default {
   },
   createPost(
     parent,
-    { data, data: { author } },
-    { db: { users, posts }, pubsub },
+    { data },
+    { db: { users, posts }, pubsub, prisma },
     info
   ) {
-    const userExists = users.some((u) => u.id === author);
-    if (!userExists) {
-      throw new Error("User not found");
-    }
-
-    const post = {
-      id: uuid(),
-      ...data,
-    };
-
-    posts.push(post);
-    if(post.published) {
-      console.log(post)
-      pubsub.publish(`post: ${post.author}`, {post: {mutation: "create", data: post}})
-    }
-    return post;
+    return prisma.mutation.createPost({data}, info);
   },
   updatePost(parent, { post: id, data }, { db: { posts }, pubsub }, info) {
     const post = posts.find((u) => u.id === id);
