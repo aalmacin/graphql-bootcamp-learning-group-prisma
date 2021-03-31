@@ -1,7 +1,7 @@
 export default {
   post: {
     subscribe(parent, {user: id}, {db: {users}, pubsub, prisma}, info) {
-      return prisma.subscription.post({where: {node: {user: {id: id}}}}, info)
+      return prisma.subscription.post({where: {node: {published: true}}}, info)
     }
   },
   comment: {
