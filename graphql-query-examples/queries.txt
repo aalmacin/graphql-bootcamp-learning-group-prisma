@@ -1,4 +1,17 @@
 query {
+  users {
+    id
+    name
+    email
+    posts {
+      title
+      body
+      published
+    }
+  }
+}
+
+query {
   posts {
     id
     title
@@ -16,6 +29,7 @@ query {
   }
 }
 
+
 query {
   comments {
     id
@@ -24,7 +38,6 @@ query {
       id
       name
       email
-      age
     }
     post {
       id
@@ -35,20 +48,10 @@ query {
   }
 }
 
-
-query {
-  users {
-    id
-    name
-    email
-  }
-}
-
-
 mutation {
   createUser(data: {
-    name: "Warren Buffet",
-    email: "warren@example.com"
+    name: "Charlie Hunger",
+    email: "charslie@example.com"
   }) {
     id
     name
@@ -57,14 +60,16 @@ mutation {
 }
 
 mutation {
-  updateUser(data: {name: "Warren Buffet"}, where: {id: "ckm9whybx008109543mhfxm1q"}) {
+  updateUser(data: {name: "Elon Musk", email: "elon@example.com"}, 
+    where: {id: "ckmwszx9r00530900n7nxu1wy"}) {
     id
     name
+    email
   }
 }
 
 mutation {
-  deleteUser(where: {id: "ckm9whybx008109543mhfxm1q"}) {
+  deleteUser(where: {id: "ckmwszx9r00530900n7nxu1wy"}) {
     id
     name
   }
@@ -72,11 +77,11 @@ mutation {
 
 mutation {
   createPost(data: {
-    title: "World",
-    body: "The world is yours",
+    title: "Invest",
+    body: "Dividend is great",
     published:true,
     author: {
-      connect: {id: "ckm9ybk3j00110b00db5j0mj5"}
+      connect: {id: "ckmpnm6ni00070900gpppt3jk"}
     }
   }) {
     id
@@ -93,7 +98,7 @@ mutation {
 }
 
 mutation {
-  updatePost(data: {body: "Woah"}, where: {id: "ckm9ycex4001t0b00yis9fyn4"}) {
+  updatePost(data: {body: "Amazing things"}, where: {id: "ckmbdpdc500fy0a00lnkto7np"}) {
     id
     title
     body
@@ -102,9 +107,33 @@ mutation {
 }
 
 mutation {
-  createComment(data: {text: "This is nice", user: {connect: {id: "ckm9ybuo6001c0b00fciocubt"}}, post: {
-    connect: {id: "ckm9yhgvv005j0b00m0ohts5t"}
+  deletePost(where: {id: "ckmbda8qc00bl0a00yujit7ph"}) {
+    id
+    title
+    body
+    published
+  }
+}
+
+mutation {
+  createComment(data: {text: "This would change the worldxx", 
+    user: {connect: {id: "ckmbd7gwl009r0a00t0d10ofo"}}, post: {
+    connect: {id: "ckmwt8yxi005h0900ja2h0av8"}
   }}) {
+    id
+    text
+  }
+}
+
+mutation {
+  updateComment(data: {text: "Totally agree"}, where: {id: "ckmwtujfd006309000sar540v"}) {
+    id
+    text
+  }
+}
+
+mutation {
+  deleteComment(where: {id: "ckmwu4u1f006d0900wicucnra"}) {
     id
     text
   }

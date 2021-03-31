@@ -21,16 +21,8 @@ export default {
     }
   },
   comment: {
-    subscribe(parent, { post: id }, { pubsub, db: { posts } }, info) {
-      const post = posts.find((p) => p.id === id);
-      if (!post) {
-        throw new Error("Post not found");
-      }
-      if (!post.published) {
-        throw new Error("Post not published");
-      }
-
-      return pubsub.asyncIterator(`comment: ${id}`);
+    subscribe(parent, { post: id }, { pubsub, db: { posts }, prisma }, info) {
+      return prisma.subscription.comment(null, info)
     },
   },
 };
