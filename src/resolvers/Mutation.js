@@ -11,11 +11,12 @@ export default {
       data
     }, info)
   },
-  async updateUser(parent, { user: id, data }, { db: { users }, prisma }, info) {
-    const user = await prisma.exists.User({id})
-    if (!user) {
+  async updateUser(parent, { data, where: {id}, where }, { db: { users }, prisma }, info) {
+    const userExists = await prisma.exists.User({id})
+    if (!userExists) {
       throw new Error("User not found.");
     }
+    const user = await prisma.query.user({where: {id}}, "{ id name email }")
 
     if (typeof data.email === "string") {
       const emailTaken = await prisma.exists.User({email: data.email})
@@ -30,12 +31,8 @@ export default {
       if (typeof data.email === "string") {
         user.email = data.email;
       }
-
-      if (typeof data.age !== "undefined") {
-        user.age = data.age;
-      }
     }
-    return prisma.mutation.updateUser({data, user: id}, info);
+    return prisma.mutation.updateUser({data, where: { id }}, info);
   },
   deleteUser(parent, { user }, { db: { users, posts, comments } }, info) {
     const userIndex = users.findIndex((u) => u.id === user);
