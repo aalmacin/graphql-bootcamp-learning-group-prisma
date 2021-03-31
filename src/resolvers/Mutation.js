@@ -19,45 +19,11 @@ export default {
   ) {
     return prisma.mutation.createPost({data}, info);
   },
-  updatePost(parent, { post: id, data }, { db: { posts }, pubsub }, info) {
-    const post = posts.find((u) => u.id === id);
-    if (!post) {
-      throw new Error("Post not found.");
-    }
-
-    if (typeof data.title === "string") {
-      post.title = data.title;
-    }
-
-    if (typeof data.body === "string") {
-      post.body = data.body;
-    }
-
-    if (typeof data.published === "boolean") {
-      post.published = data.published;
-    }
-
-    if(post.published) {
-      pubsub.publish(`post: ${post.author}`, {post: {mutation: "update", data: post}})
-    }
-
-    return post;
+  updatePost(parent, { post: id, data, where }, { db: { posts }, pubsub, prisma }, info) {
+    return prisma.mutation.updatePost({data, where}, info);
   },
-  deletePost(parent, { post }, { db: { posts, comments }, pubsub }, info) {
-    const postIndex = posts.findIndex((p) => p.id === post);
-
-    if (postIndex === -1) {
-      throw new Error("Post not found.");
-    }
-    const deletedPost = { ...posts[postIndex] };
-
-    posts.splice(postIndex, 1);
-    comments = comments.filter((c) => c.post !== deletedPost.id);
-
-    if(deletedPost.published) {
-      pubsub.publish(`post: ${post.author}`, {post: {mutation: "delete", data: deletedPost}})
-    }
-    return deletedPost;
+  deletePost(parent, { post, where }, { db: { posts, comments }, pubsub, prisma }, info) {
+    return prisma.mutation.deletePost({where});
   },
   async createComment(
     parent,
