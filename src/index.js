@@ -11,7 +11,7 @@ import prisma from "./prisma"
 const pubsub = new PubSub();
 
 const server = new GraphQLServer({
-  typeDefs: "./src/schema.graphql",
+  typeDefs: "./src/generated/prisma.graphql",
   resolvers: {
     Query,
     Mutation,

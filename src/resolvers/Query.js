@@ -21,14 +21,14 @@ export default {
 
             // return users.filter((u) => u.name.toLowerCase().includes(args.query.toLowerCase()))
         },
-        me() {
-            return {
-                id: '123098',
-                name: 'Jerome',
-                email: 'jerome@jerome.com',
-                age: 33
-            }
-        },
+        // me() {
+        //     return {
+        //         id: '123098',
+        //         name: 'Jerome',
+        //         email: 'jerome@jerome.com',
+        //         age: 33
+        //     }
+        // },
         post() {
             return {
                 id: '1234jdj',

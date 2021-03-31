@@ -1,16 +1,16 @@
 export default {
-  count: {
-    subscribe(parent, args, { pubsub }, info) {
-      let count = 0;
+  // count: {
+  //   subscribe(parent, args, { pubsub }, info) {
+  //     let count = 0;
 
-      setInterval(() => {
-        count++;
-        pubsub.publish("count", { count });
-      }, 1000);
+  //     setInterval(() => {
+  //       count++;
+  //       pubsub.publish("count", { count });
+  //     }, 1000);
 
-      return pubsub.asyncIterator("count");
-    },
-  },
+  //     return pubsub.asyncIterator("count");
+  //   },
+  // },
   post: {
     subscribe(parent, {user: id}, {db: {users}, pubsub}, info) {
       const user = users.find((u) => u.id === id);
