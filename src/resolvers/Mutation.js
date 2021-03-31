@@ -1,49 +1,15 @@
 import uuid from "uuid/v4";
-import prisma from "../prisma";
 export default {
   async createUser(parent, { data, data: { email } }, { db: { users }, prisma }, info) {
-    const emailTaken = await prisma.exists.User({email: email})
-
-    if (emailTaken) {
-      throw new Error("Email taken.");
-    }
-
     return prisma.mutation.createUser({
       data
     }, info)
   },
   async updateUser(parent, { data, where: {id}, where }, { db: { users }, prisma }, info) {
-    const userExists = await prisma.exists.User({id})
-    if (!userExists) {
-      throw new Error("User not found.");
-    }
-    const user = await prisma.query.user({where: {id}}, "{ id name email }")
-
-    if (typeof data.email === "string") {
-      const emailTaken = await prisma.exists.User({email: data.email})
-      if (emailTaken) {
-        throw new Error("Email taken");
-      }
-
-      if (typeof data.name === "string") {
-        user.name = data.name;
-      }
-
-      if (typeof data.email === "string") {
-        user.email = data.email;
-      }
-    }
     return prisma.mutation.updateUser({data, where: { id }}, info);
   },
   async deleteUser(parent, { where }, { db: { users, posts, comments }, prisma }, info) {
-    const userExists = await prisma.exists.User({id: where.id})
-    if (!userExists) {
-      throw new Error("User not found.");
-    }
-
-    const deletedUser = await prisma.mutation.deleteUser({where})
-
-    return deletedUser;
+    return prisma.mutation.deleteUser({where});
   },
   createPost(
     parent,
