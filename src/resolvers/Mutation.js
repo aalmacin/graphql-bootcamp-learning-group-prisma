@@ -11,6 +11,17 @@ import jwt from "jsonwebtoken";
 // const decoded2 = jwt.verify(token, "mybestguess");
 // console.log("DECODED 2", decoded2);
 
+// const dummy = async () => {
+//   const email = "somethin@example.com";
+//   const password = "pword1234";
+
+//   const hashedPassword =
+//     "$2a$10$LeLM3bwCDnTFNpmXcaYZluZG8hOzBf8dVSX/7ugxGeIRqY/9Cpe6W";
+//   const isMatch = await bcrypt.compare(password, hashedPassword);
+//   console.log(isMatch);
+// };
+// dummy();
+
 export default {
   async createUser(
     parent,
@@ -29,7 +40,7 @@ export default {
       data: { ...data, password: hashedPassword },
     });
 
-    console.log('New User', user);
+    console.log("New User", user);
 
     return {
       user,
