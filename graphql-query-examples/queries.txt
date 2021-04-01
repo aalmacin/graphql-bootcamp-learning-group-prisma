@@ -50,8 +50,9 @@ query {
 
 mutation {
   createUser(data: {
-    name: "Charlie Hunger",
-    email: "charslie@example.com"
+    name: "Charlie Munger",
+    email: "charlie@example.com",
+    password: "new-account"
   }) {
     id
     name

@@ -1,15 +1,41 @@
 import uuid from "uuid/v4";
+import bcrypt from "bcryptjs";
+
 export default {
-  async createUser(parent, { data, data: { email } }, { db: { users }, prisma }, info) {
-    return prisma.mutation.createUser({
-      data
-    }, info)
+  async createUser(
+    parent,
+    { data, data: { email, password } },
+    { db: { users }, prisma },
+    info
+  ) {
+    if (password.length < 8) {
+      throw new Error("Password must be 8 characters or longer.");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    return prisma.mutation.createUser(
+      {
+        data: { ...data, password: hashedPassword },
+      },
+      info
+    );
   },
-  async updateUser(parent, { data, where: {id}, where }, { db: { users }, prisma }, info) {
-    return prisma.mutation.updateUser({data, where: { id }}, info);
+  async updateUser(
+    parent,
+    { data, where: { id }, where },
+    { db: { users }, prisma },
+    info
+  ) {
+    return prisma.mutation.updateUser({ data, where: { id } }, info);
   },
-  async deleteUser(parent, { where }, { db: { users, posts, comments }, prisma }, info) {
-    return prisma.mutation.deleteUser({where});
+  async deleteUser(
+    parent,
+    { where },
+    { db: { users, posts, comments }, prisma },
+    info
+  ) {
+    return prisma.mutation.deleteUser({ where });
   },
   async createPost(
     parent,
@@ -17,13 +43,23 @@ export default {
     { db: { users, posts }, pubsub, prisma },
     info
   ) {
-    return prisma.mutation.createPost({data}, info);
+    return prisma.mutation.createPost({ data }, info);
   },
-  async updatePost(parent, { post: id, data, where }, { db: { posts }, pubsub, prisma }, info) {
-    return prisma.mutation.updatePost({data, where}, info);
+  async updatePost(
+    parent,
+    { post: id, data, where },
+    { db: { posts }, pubsub, prisma },
+    info
+  ) {
+    return prisma.mutation.updatePost({ data, where }, info);
   },
-  async deletePost(parent, { post, where }, { db: { posts, comments }, pubsub, prisma }, info) {
-    return prisma.mutation.deletePost({where}, info);
+  async deletePost(
+    parent,
+    { post, where },
+    { db: { posts, comments }, pubsub, prisma },
+    info
+  ) {
+    return prisma.mutation.deletePost({ where }, info);
   },
   async createComment(
     parent,
@@ -31,12 +67,22 @@ export default {
     { db: { users, posts }, pubsub, prisma },
     info
   ) {
-    return prisma.mutation.createComment({data}, info);
+    return prisma.mutation.createComment({ data }, info);
   },
-  async updateComment(parent, { post: id, data, where }, { db: { posts }, pubsub, prisma }, info) {
-    return prisma.mutation.updateComment({data, where}, info);
+  async updateComment(
+    parent,
+    { post: id, data, where },
+    { db: { posts }, pubsub, prisma },
+    info
+  ) {
+    return prisma.mutation.updateComment({ data, where }, info);
   },
-  async deleteComment(parent, { post, where }, { db: { posts, comments }, pubsub, prisma }, info) {
-    return prisma.mutation.deleteComment({where}, info);
+  async deleteComment(
+    parent,
+    { post, where },
+    { db: { posts, comments }, pubsub, prisma },
+    info
+  ) {
+    return prisma.mutation.deleteComment({ where }, info);
   },
 };
