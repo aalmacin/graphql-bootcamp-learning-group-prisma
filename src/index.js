@@ -6,12 +6,12 @@ import Subscription from "./resolvers/Subscription";
 import Post from "./resolvers/Post";
 import User from "./resolvers/User";
 import Comment from "./resolvers/Comment";
-import prisma from "./prisma"
+import prisma from "./prisma";
 
 const pubsub = new PubSub();
 
 const server = new GraphQLServer({
-  typeDefs: "./src/generated/prisma.graphql",
+  typeDefs: "./src/schema.graphql",
   resolvers: {
     Query,
     Mutation,
@@ -23,7 +23,7 @@ const server = new GraphQLServer({
   context: {
     db,
     pubsub,
-    prisma
+    prisma,
   },
 });
 

@@ -1,10 +1,11 @@
-import {Prisma} from 'prisma-binding'
+import { Prisma } from "prisma-binding";
 
 const prisma = new Prisma({
-    typeDefs: 'src/generated/prisma.graphql',
-    endpoint: 'http://localhost:4466'
-})
-export default prisma
+  typeDefs: "src/generated/prisma.graphql",
+  endpoint: "http://localhost:4466",
+  secret: "secretherebro",
+});
+export default prisma;
 
 // const createUser = async (username) => {
 //     return prisma.mutation.createUser({data: {username}}, '{ id username }')

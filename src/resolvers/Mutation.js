@@ -1,5 +1,15 @@
 import uuid from "uuid/v4";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+
+// const token = jwt.sign({ id: 46 }, "mysecret");
+// console.log("TOKEN", token);
+
+// const decoded = jwt.decode(token);
+// console.log("DECODED", decoded);
+
+// const decoded2 = jwt.verify(token, "mybestguess");
+// console.log("DECODED 2", decoded2);
 
 export default {
   async createUser(
@@ -13,13 +23,18 @@ export default {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("HASHED", hashedPassword);
 
-    return prisma.mutation.createUser(
-      {
-        data: { ...data, password: hashedPassword },
-      },
-      info
-    );
+    const user = await prisma.mutation.createUser({
+      data: { ...data, password: hashedPassword },
+    });
+
+    console.log('New User', user);
+
+    return {
+      user,
+      token: jwt.sign({ userId: user.id }, "whatasecret"),
+    };
   },
   async updateUser(
     parent,
