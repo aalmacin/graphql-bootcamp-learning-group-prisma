@@ -123,10 +123,13 @@ export default {
     if(!user) {
       throw new Error("User does not exist")
     }
-    if(bcrypt.compare(user.password, args.data.password)) {
-      console.log("Exists")
+    const correctPassword = await bcrypt.compare(args.data.password, user.password)
+    if(correctPassword) {
+      return {
+        token: jwt.sign({ userId: user.id }, "whatasecret"),
+        user
+      }
     }
-    console.log("Fake")
-    return user
+    throw new Error("Login failed")
   },
 };
