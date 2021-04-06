@@ -111,4 +111,11 @@ export default {
   ) {
     return prisma.mutation.deleteComment({ where }, info);
   },
+  async login(
+    parent,
+    args,
+    context,
+    info
+  ) {
+  },
 };
