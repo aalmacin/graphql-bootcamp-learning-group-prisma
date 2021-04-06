@@ -34,8 +34,10 @@ export default {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("HASHED", hashedPassword);
 
+    console.log({
+      data: { ...data, password: hashedPassword },
+    })
     const user = await prisma.mutation.createUser({
       data: { ...data, password: hashedPassword },
     });
@@ -114,8 +116,17 @@ export default {
   async login(
     parent,
     args,
-    context,
+    {prisma},
     info
   ) {
+    const user = await prisma.query.user({where: {email: args.data.email}})
+    if(!user) {
+      throw new Error("User does not exist")
+    }
+    if(bcrypt.compare(user.password, args.data.password)) {
+      console.log("Exists")
+    }
+    console.log("Fake")
+    return user
   },
 };
