@@ -1,6 +1,7 @@
 import uuid from "uuid/v4";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import {getUserId} from '../utils/getUserId'
 
 // const token = jwt.sign({ id: 46 }, "mysecret");
 // console.log("TOKEN", token);
@@ -60,18 +61,24 @@ export default {
   async deleteUser(
     parent,
     { where },
-    { db: { users, posts, comments }, prisma },
+    { db: { users, posts, comments }, prisma, request },
     info
   ) {
+    const userId = getUserId(request)
     return prisma.mutation.deleteUser({ where });
   },
   async createPost(
     parent,
     { data },
-    { db: { users, posts }, pubsub, prisma },
+    { db: { users, posts }, pubsub, prisma, request },
     info
   ) {
-    return prisma.mutation.createPost({ data }, info);
+    const userId = getUserId(request)
+    return prisma.mutation.createPost({ data: {...data, author: {
+      connect: {
+        id: userId
+      }
+    }} }, info);
   },
   async updatePost(
     parent,

@@ -49,15 +49,6 @@ input CreatePostInput {
     title: String!
     body: String!
     published: Boolean!
-    author: UserConnectInput!
-}
-
-input UserConnectInput {
-    connect: ConnectID! 
-}
-
-input ConnectID {
-    id: String!
 }
 
 input UpdatePostInput {
