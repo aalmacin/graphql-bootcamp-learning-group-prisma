@@ -61,11 +61,12 @@ export default {
   },
   async deleteUser(
     parent,
-    { where },
+    args,
     { db: { users, posts, comments }, prisma, request },
     info
   ) {
-    return prisma.mutation.deleteUser({ where });
+    const userId = getUserId(request)
+    return prisma.mutation.deleteUser({ where: {id: userId} });
   },
   async createPost(
     parent,
@@ -91,11 +92,23 @@ export default {
   },
   async deletePost(
     parent,
-    { post, where },
-    { db: { posts, comments }, pubsub, prisma },
+    { post, id },
+    { db: { posts, comments }, pubsub, prisma, request },
     info
   ) {
-    return prisma.mutation.deletePost({ where }, info);
+    const userId = getUserId(request)
+    const postExists = await prisma.exists.Post({
+      id,
+      author: {
+        id: userId
+      }
+    })
+
+    if(!postExists) {
+      throw new Error('Unable to delete post')
+    }
+
+    return prisma.mutation.deletePost({ where: {id} }, info);
   },
   async createComment(
     parent,

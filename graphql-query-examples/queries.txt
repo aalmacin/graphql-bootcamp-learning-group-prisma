@@ -61,8 +61,7 @@ mutation {
 }
 
 mutation {
-  updateUser(data: {name: "Elon Musk", email: "elon@example.com"}, 
-    where: {id: "ckmwszx9r00530900n7nxu1wy"}) {
+  updateUser(data: {name: "Elon Musk", email: "elon@example.com"}) {
     id
     name
     email
@@ -70,7 +69,7 @@ mutation {
 }
 
 mutation {
-  deleteUser(where: {id: "ckmwszx9r00530900n7nxu1wy"}) {
+  deleteUser {
     id
     name
   }
@@ -80,10 +79,7 @@ mutation {
   createPost(data: {
     title: "Invest",
     body: "Dividend is great",
-    published:true,
-    author: {
-      connect: {id: "ckmpnm6ni00070900gpppt3jk"}
-    }
+    published:true
   }) {
     id
     title
