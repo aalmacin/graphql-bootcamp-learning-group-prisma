@@ -52,11 +52,12 @@ export default {
   },
   async updateUser(
     parent,
-    { data, where: { id }, where },
-    { db: { users }, prisma },
+    { data },
+    { db: { users }, prisma, request },
     info
   ) {
-    return prisma.mutation.updateUser({ data, where: { id } }, info);
+    const userId = getUserId(request)
+    return prisma.mutation.updateUser({ data, where: { id: userId } }, info);
   },
   async deleteUser(
     parent,
@@ -64,7 +65,6 @@ export default {
     { db: { users, posts, comments }, prisma, request },
     info
   ) {
-    const userId = getUserId(request)
     return prisma.mutation.deleteUser({ where });
   },
   async createPost(
@@ -86,7 +86,8 @@ export default {
     { db: { posts }, pubsub, prisma },
     info
   ) {
-    return prisma.mutation.updatePost({ data, where }, info);
+    const userId = getUserId(request)
+    return prisma.mutation.updatePost({ data, where: {...where, id: userId} }, info);
   },
   async deletePost(
     parent,
