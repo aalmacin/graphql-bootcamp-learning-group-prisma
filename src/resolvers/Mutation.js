@@ -36,9 +36,6 @@ export default {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    console.log({
-      data: { ...data, password: hashedPassword },
-    })
     const user = await prisma.mutation.createUser({
       data: { ...data, password: hashedPassword },
     });
@@ -83,12 +80,21 @@ export default {
   },
   async updatePost(
     parent,
-    { post: id, data, where },
-    { db: { posts }, pubsub, prisma },
+    { id, data },
+    { db: { posts }, pubsub, prisma, request },
     info
   ) {
     const userId = getUserId(request)
-    return prisma.mutation.updatePost({ data, where: {...where, id: userId} }, info);
+    const postExists = await prisma.exists.Post({
+      id: id,
+      author: {
+        id: userId
+      }
+    })
+    if(!postExists) {
+      throw new Error('Unable to update post')
+    }
+    return prisma.mutation.updatePost({ data, where: {id} }, info);
   },
   async deletePost(
     parent,
