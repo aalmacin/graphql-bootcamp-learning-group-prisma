@@ -118,11 +118,21 @@ export default {
   },
   async createComment(
     parent,
-    { data },
-    { db: { users, posts }, pubsub, prisma },
+    { data: {text, post} },
+    { db: { users, posts }, pubsub, prisma, request },
     info
   ) {
-    return prisma.mutation.createComment({ data }, info);
+    const userId = getUserId(request)
+    return prisma.mutation.createComment({ data: {text , user: {
+      connect: {
+        id: userId
+      }},
+      post: {
+        connect: {
+          id: post
+        }
+      }
+     }}, info);
   },
   async updateComment(
     parent,
