@@ -58,19 +58,48 @@ export default {
             //     published: true
             // }
         },
-        posts(parent, args, {db: {posts}, prisma}, info) {
-            if(args.query) {
-                return prisma.query.posts({
-                    where: {
-                        OR: [
-                            {title_contains: args.query},
-                            {body_contains: args.query},
-                        ]
+        myPosts(parent, args, {db: {posts}, prisma, request}, info) {
+            const userId = getUserId(request)
+            const opArgs = {
+                where: {
+                    author: {
+                        id: userId
                     }
-                }, info)
+                }
+            }
+            if(args.query) {
+                opArgs.where.OR =  [
+                    {title_contains: args.query},
+                    {body_contains: args.query},
+                ]
             }
 
-            return prisma.query.posts(null, info)
+            return prisma.query.posts(opArgs, info)
+            // if(!args.query) {
+            // return posts
+            // }
+            // return posts.filter((p) => {
+            //     return p.body.toLowerCase().includes(
+            //         args.query.toLowerCase()
+            //     ) || p.title.toLowerCase().includes(
+            //         args.query.toLowerCase()
+            //     )
+            // })
+        },
+        posts(parent, args, {db: {posts}, prisma}, info) {
+            const opArgs = {
+                where: {
+                    published: true
+                }
+            }
+            if(args.query) {
+                opArgs.where.OR =  [
+                    {title_contains: args.query},
+                    {body_contains: args.query},
+                ]
+            }
+
+            return prisma.query.posts(opArgs, info)
             // if(!args.query) {
             // return posts
             // }
