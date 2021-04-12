@@ -44,7 +44,7 @@ export default {
 
     return {
       user,
-      token: jwt.sign({ userId: user.id }, "whatasecret"),
+      token: jwt.sign({ userId: user.id }, "whatasecret", {expiresIn: '7 days'}),
     };
   },
   async updateUser(
