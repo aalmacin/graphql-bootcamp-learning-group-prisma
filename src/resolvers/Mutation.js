@@ -123,6 +123,14 @@ export default {
     info
   ) {
     const userId = getUserId(request)
+    const postExists = await prisma.exists.Post({
+      id: post,
+      published: true
+    })
+
+    if(!postExists) {
+      throw new Error("Unable to find post")
+    }
     return prisma.mutation.createComment({ data: {text , user: {
       connect: {
         id: userId
