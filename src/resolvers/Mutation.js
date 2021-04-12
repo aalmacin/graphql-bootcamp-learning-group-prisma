@@ -23,6 +23,8 @@ import {getUserId} from '../utils/getUserId'
 // };
 // dummy();
 
+const signJwt = (userId) => jwt.sign({ userId }, "whatasecret", {expiresIn: '7 days'})
+
 export default {
   async createUser(
     parent,
@@ -44,7 +46,7 @@ export default {
 
     return {
       user,
-      token: jwt.sign({ userId: user.id }, "whatasecret", {expiresIn: '7 days'}),
+      token: signJwt(user.id),
     };
   },
   async updateUser(
@@ -171,7 +173,7 @@ export default {
     const correctPassword = await bcrypt.compare(args.data.password, user.password)
     if(correctPassword) {
       return {
-        token: jwt.sign({ userId: user.id }, "whatasecret"),
+        token: signJwt(user.id),
         user
       }
     }
